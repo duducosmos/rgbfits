@@ -24,7 +24,7 @@ setup(
     license="GNU v3",
     keywords="fits, png, rgb",
     url="https://github.com/duducosmos/rgbfits",
-    install_requires=['easygui', 'astropy', 'numpy', 'scipy', 'pillow'],
+    install_requires=['easygui', 'astropy', 'numpy', 'scipy', 'pillow', 'pyfits'],
     py_modules = ['rgbfits', 'trilogy', 'im2rgbfits'],
     long_description=read('README'),
     classifiers=[

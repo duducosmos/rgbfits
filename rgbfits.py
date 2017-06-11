@@ -8,7 +8,8 @@ _contact = "pereira.somoza@gmail.com"
 
 import easygui as eg
 from trilogy import Trilogy, params_cl
-
+from im2rgbfits import im2rgbfits
+from im2rgbfits import params_cl as pcl
 
 class RGBFits:
 
@@ -32,12 +33,17 @@ class RGBFits:
         self.selectImages()
         self.genInFile(self.inFile)
         Trilogy(self.inFile[0] + "/trilogy.in", images=None, **params_cl()).run()
+        self.savefile
+        fitsVersion = self.savefile[1].split(".")[0] + '.fits'
+        im2rgbfits(self.savefile[0] + "/" + self.savefile[1],
+                   self.savefile[0] + "/" + fitsVersion, overwrite=True,
+                   headerfile=None)
 
 
 
-    def _selectImages(self, text):
+    def _selectImages(self, text, title):
         return eg.fileopenbox(msg=text,
-                                  title="Open R images",
+                                  title=title,
                                   default="*.fits", filetypes=["*.fits"],
                                   multiple=True)
 
@@ -72,23 +78,31 @@ sampledy  {13}
 
     def selectImages(self):
         print("Select the fits image for R band")
-        self.rImages = self._selectImages("Select images for R band")
+        self.rImages = self._selectImages("Select images for R band", 'R band')
         self.rImages = '\n'.join(self.rImages)
+        print("Images for R:")
+        print(self.rImages)
 
         print("Select the fits image for G band")
-        self.gImages = self._selectImages("Select images for G band")
+        self.gImages = self._selectImages("Select images for G band", "G Band")
         self.gImages = '\n'.join(self.gImages)
+        print("Images for G:")
+        print(self.gImages)
 
         print("Select the fits image for B band")
-        self.bImages = self._selectImages("Select images for B band")
+        self.bImages = self._selectImages("Select images for B band", "B Band")
         self.bImages = '\n'.join(self.bImages)
+        print("Images for B:")
+        print(self.bImages)
+
         self.inFile.append(self.rImages)
         self.inFile.append(self.gImages)
         self.inFile.append(self.bImages)
 
     def saveFile(self):
-        self.savefile = eg.filesavebox(msg="Output file name",
-                       title="Output File",
+        self.savefile = eg.filesavebox(
+                       msg="The local and name of combined RGB image",
+                       title="The combined Image Name",
                        default="*.png",
                        filetypes=["*.png"])
         self.savefile = ['/'.join(self.savefile.split("/")[0:-1]),
